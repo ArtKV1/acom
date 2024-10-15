@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 
 def main():
-    cap = cv2.VideoCapture("rtsp://192.168.1.97:8080/h264_pcm.sdp")
+    cap = cv2.VideoCapture(0)
 
     while True:
         ret, frame = cap.read()
@@ -38,7 +38,7 @@ def main():
             cX = int(moments['m10'] / area) 
             cY = int(moments['m01'] / area) 
             
-            x, y, w, h = cv2.boundingRect(closing)
+            x, y, w, h = cv2.boundingRect(opening)
 
             cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 0, 0), 2) 
 
@@ -46,9 +46,13 @@ def main():
 
             cv2.putText(frame, f"Area: {int(area)}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
+        cv2.namedWindow('HSV Кадр', cv2.WINDOW_NORMAL)
         cv2.imshow('HSV Кадр', hsv_frame)
+        cv2.namedWindow('Маска Красного', cv2.WINDOW_NORMAL)
         cv2.imshow('Маска Красного', red_mask)
+        cv2.namedWindow('Закрытие', cv2.WINDOW_NORMAL)
         cv2.imshow('Закрытие', closing)
+        cv2.namedWindow('Результат', cv2.WINDOW_NORMAL)
         cv2.imshow('Результат', frame)
     
     cap.release()
